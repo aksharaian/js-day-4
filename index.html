@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Manager</title>
+    <style>
+        input, button {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Contact Manager</h1>
+
+    <label for="name">Name:</label>
+    <input type="text" id="name">
+
+    <label for="phone">Phone:</label>
+    <input type="text" id="phone">
+
+    <button onclick="addContact()">Add Contact</button>
+
+    <hr>
+
+    <h2>Contact List</h2>
+
+    <label for="search">Search:</label>
+    <input type="text" id="search" oninput="searchContacts()">
+
+    <ul id="contactList"></ul>
+
+    <script>
+        // Contact array to store contacts
+        const contacts = [];
+
+        // Function to add a new contact
+        function addContact() {
+            const nameInput = document.getElementById('name');
+            const phoneInput = document.getElementById('phone');
+
+            const name = nameInput.value.trim();
+            const phone = phoneInput.value.trim();
+
+            if (name !== '' && phone !== '') {
+                // Create a contact object
+                const contact = { name, phone };
+
+                // Add the contact to the array
+                contacts.push(contact);
+
+                // Clear input fields
+                nameInput.value = '';
+                phoneInput.value = '';
+
+                // Refresh the contact list
+                displayContacts();
+            }
+        }
+
+        // Function to display contacts
+        function displayContacts() {
+            const contactList = document.getElementById('contactList');
+            contactList.innerHTML = ''; // Clear the list
+
+            // Loop through contacts and create list items
+            contacts.forEach(contact => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${contact.name} - ${contact.phone}`;
+
+                // Add a delete button to each contact
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.onclick = () => deleteContact(contact);
+
+                listItem.appendChild(deleteButton);
+                contactList.appendChild(listItem);
+            });
+        }
+
+        // Function to delete a contact
+        function deleteContact(contact) {
+            const index = contacts.indexOf(contact);
+            if (index !== -1) {
+                // Remove the contact from the array
+                contacts.splice(index, 1);
+                // Refresh the contact list
+                displayContacts();
+            }
+        }
+
+        // Function to search contacts
+        function searchContacts() {
+            const searchInput = document.getElementById('search');
+            const searchTerm = searchInput.value.trim().toLowerCase();
+
+            // Filter contacts based on the search term
+            const filteredContacts = contacts.filter(contact =>
+                contact.name.toLowerCase().includes(searchTerm) ||
+                contact.phone.toLowerCase().includes(searchTerm)
+            );
+
+            // Display the filtered contacts
+            displayFilteredContacts(filteredContacts);
+        }
+
+        // Function to display filtered contacts
+        function displayFilteredContacts(filteredContacts) {
+            const contactList = document.getElementById('contactList');
+            contactList.innerHTML = ''; // Clear the list
+
+            // Loop through filtered contacts and create list items
+            filteredContacts.forEach(contact => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${contact.name} - ${contact.phone}`;
+
+                // Add a delete button to each contact
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.onclick = () => deleteContact(contact);
+
+                listItem.appendChild(deleteButton);
+                contactList.appendChild(listItem);
+            });
+        }
+    </script>
+
+</body>
+</html>
